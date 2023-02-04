@@ -28,7 +28,13 @@ namespace TraversalApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy("TraversalApiCors",opts =>
+                {
+                    opts.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
             services.AddDbContext<VisitorContext>(opts =>
             {
                 opts.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
@@ -50,7 +56,10 @@ namespace TraversalApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TraversalApi v1"));
             }
 
+           
             app.UseRouting();
+            app.UseCors("TraversalApiCors");
+
 
             app.UseAuthorization();
 
